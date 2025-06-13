@@ -4,18 +4,18 @@ simglobe-analyze is a Python script for exploring, understanding, and visualizin
 
 ## Installation 
 
-'''git
+''' git
 git clone https://github.com/trietnguyen159753/simglobe-analyze
 '''
 
 ## Requirement 
 
-'''bash
+''' bash
 pip install -r requirements.txt
 '''
 
 ## Usage 
 
-'''python
+''' python
 python ./main.py
 '''
