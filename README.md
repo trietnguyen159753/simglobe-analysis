@@ -1,6 +1,6 @@
 # simglobe-analyze
 
-simglobe-analyze is a Python script for exploring, understanding, and visualizing the result of the Simglobe model. It is used for debugging and tuning the Simglobe model. 
+simglobe-analyze is a Python script for exploring, understanding, and visualizing the result of the Simglobe model, for the purpose of debugging and parameter tuning. 
 
 ## Installation 
 
