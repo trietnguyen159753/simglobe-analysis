@@ -1,0 +1,44 @@
+project_name = "simglobe_analysis"
+
+input_var = [
+  "interest_rate",
+  "vat_rate",
+  "corporate_tax",
+  "government_expenditure",
+  "import_tariff"
+]
+
+output_var = [
+  'real_gdp_growth',
+  'inflation',
+  'unemployment',
+  'budget_balance',
+  'approval_index', 
+]
+
+scenario = [
+  "constant",
+  "random"
+]
+
+unique = [
+  "country",
+  "period",
+  "scenario"
+]
+
+[path]
+input_constant = "./data/constant.parquet"
+input_random = "./data/random.parquet"
+output_summary = "./regression/"
+output_cook = "./visual/cook/"
+output_dist = "./visual/dist/"
+
+[filter_param]
+iqr_threshold = 3
+filter_enable = true
+
+
+
+
+
