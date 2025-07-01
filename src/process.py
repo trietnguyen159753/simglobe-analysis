@@ -29,8 +29,8 @@ def filter_process(
 
     filter_expr = [
         pl.col(var).is_between(
-            pl.col(var).quantile(config.trim_mean).over(config.unique),
-            pl.col(var).quantile(1 - config.trim_mean).over(config.unique),
+            pl.col(var).quantile(config.trim_radius).over(config.unique),
+            pl.col(var).quantile(1 - config.trim_radius).over(config.unique),
         )
         for var in output_vars
     ]
@@ -46,27 +46,60 @@ def filter_process(
 
 def eda_process(df: pl.LazyFrame) -> None:
     
-    for country, scenario in df.select("country", "scenario").unique().collect().iter_rows():
-            print(f"Visualizing {country}, {scenario}...")
+    for country in df.select("country").unique().collect().to_series():
+            print(f"Visualizing {country}...")
             for var in config.output_var:
                 
                 df_filter = df.filter(
                     pl.col("country") == country,
-                    pl.col("scenario") == scenario,
-                ).select("country", "period", var)
+                ).select("country", "period", "scenario", var).collect().sample(fraction = 0.1)
 
-                name = f"{var} - {country} - {scenario}"
+                name = f"{var} - {country}"
 
                 fig, ax = plt.subplots(figsize=(8, 4.5))
                 ax = sns.violinplot(
-                    data=df_filter.collect(),
+                    data=df_filter,
                     x="period",
                     y=var,
-                    palette=sns.color_palette("light:#5A9", 8),
-                    hue="period",
+                    palette=sns.color_palette("light:#5A9", 2),
+                    hue="scenario",
+                    split=True,
                     inner="box",
                     cut=0,
-                    legend=False,
+                    density_norm="width"
+                )
+
+                plt.title(name)
+                plt.tight_layout()
+                if var == "approval_index":
+                    plt.ylim(0, 100)
+                    plt.yticks([0, 25, 50, 75, 100])
+                    plt.grid(axis="y", linestyle="--", alpha=0.4)
+
+                plt.savefig(f"./visual/eda/{name}.png", dpi=80)
+                plt.close()
+                
+    for period in df.select("period").unique().collect().to_series():
+            print(f"Visualizing period {period}...")
+            for var in config.output_var:
+                
+                df_filter = df.filter(
+                    pl.col("period") == period,
+                ).select("country", "period", "scenario", var).collect().sample(fraction = 0.1).sort("country")
+
+                name = f"{var} - period {period}"
+
+                fig, ax = plt.subplots(figsize=(8, 4.5))
+                ax = sns.violinplot(
+                    data=df_filter,
+                    x="country",
+                    y=var,
+                    palette=sns.color_palette("light:#5A9", 2),
+                    hue="scenario",
+                    split=True,
+                    inner="box",
+                    cut=0,
+                    density_norm="width"
                 )
 
                 plt.title(name)

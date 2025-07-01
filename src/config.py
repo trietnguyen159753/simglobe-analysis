@@ -1,3 +1,5 @@
+from numpy import float64
+from polars.datatypes.classes import Float64
 from scipy.stats._stats_py import trim_mean
 import tomli
 from pydantic import BaseModel
@@ -9,7 +11,7 @@ class PipelineConfig(BaseModel):
     output_var: list[str]
     scenario: list[str]
     unique: list[str]
-    trim_mean: float
+    trim_radius: float
 
 
 def load_config(config_path: str = "config.toml") -> PipelineConfig:
