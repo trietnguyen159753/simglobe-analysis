@@ -34,9 +34,7 @@ output_summary = "./regression/"
 output_cook = "./visual/cook/"
 output_dist = "./visual/dist/"
 
-[filter_param]
-iqr_threshold = 3
-filter_enable = true
+trim_radius = 0.05
 
 
 

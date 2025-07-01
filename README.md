@@ -11,7 +11,7 @@ git clone https://github.com/trietnguyen159753/simglobe-analyze
 Using uv to install all dependencies in pyproject.toml:
 ``` bash
 uv venv
-source .venv/bin/activate
+.venv/Scripts/activate
 uv pip install .
 ```
 

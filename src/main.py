@@ -1,12 +1,10 @@
 import polars as pl
-
 from .config import config
-
-from .util import permutation
 from .process import (
     load_process,
+    eda_process,
     filter_process,
-    regression_result_process,
+    regression_process,
     visualize_process,
 )
 
@@ -14,31 +12,20 @@ from .process import (
 def main():
     df = load_process(config.scenario)
 
-    df_summaries = []
+    df_filter = filter_process(df, config.output_var)
+    df_filter.collect().write_parquet("./cache/filter.parquet")
 
-    for unique_group in permutation(df, config.unique).iter_rows():
-        _, model = filter_process(
-            df,
-            unique_group,
-            config.filter_param.filter_enable,
-            config.filter_param.iqr_threshold,
-            config.input_var,
-            config.output_var,
-        )
+    df_filter = pl.scan_parquet("./cache/filter.parquet")
 
-        df_summary = regression_result_process(
-            model,
-            unique_group,
-            config.input_var,
-        )
+    eda_process(df_filter)
 
-        df_summaries.append(df_summary)
+    df_regression = regression_process(df_filter)
+    df_regression.collect().write_parquet("./cache/regression.parquet")
 
-    df_visual = pl.concat(df_summaries)
-    
-    df_visual = pl.scan_csv("./data/regression.csv")
+    df_regression = pl.scan_parquet("./cache/regression.parquet")
 
-    visualize_process(df_visual, config.input_var, config.output_var)
+    print(df_regression.collect_schema().names())
+    visualize_process(df_regression)
 
 
 if __name__ == "__main__":
