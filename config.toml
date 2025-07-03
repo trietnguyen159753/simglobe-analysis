@@ -27,4 +27,16 @@ unique = [
   "scenario"
 ]
 
+[path]
+input_constant = "./data/constant.parquet"
+input_random = "./data/random.parquet"
+output_summary = "./regression/"
+output_cook = "./visual/cook/"
+output_dist = "./visual/dist/"
+
 trim_radius = 0.05
+
+
+
+
+
