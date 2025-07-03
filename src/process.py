@@ -29,8 +29,8 @@ def filter_process(
 
     filter_expr = [
         pl.col(var).is_between(
-            pl.col(var).quantile(config.trim_mean).over(config.unique),
-            pl.col(var).quantile(1 - config.trim_mean).over(config.unique),
+            pl.col(var).quantile(config.trim_radius).over(config.unique),
+            pl.col(var).quantile(1 - config.trim_radius).over(config.unique),
         )
         for var in output_vars
     ]
